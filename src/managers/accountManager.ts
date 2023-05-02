@@ -10,34 +10,34 @@ export class AccountManager {
     this._userRepository = userRepo;
   }
 
-  public checkUser(id: string): boolean {
-    const user = this._userRepository.get(id);
+  public async checkUser(id: string) {
+    const user = await this._userRepository.get(id);
 
     return !!user;
   }
 
-  public addUser(login: string, password: string) {
+  public async addUser(login: string, password: string) {
     const user = userBuilder.buildUser(login, password);
-    this._userRepository.create(user);
+    await this._userRepository.create(user);
 
     return user.id;
   }
 
-  public addAdmin(login: string, password: string) {
+  public async addAdmin(login: string, password: string) {
     const admin = userBuilder.buildAdmin(login, password);
-    this._userRepository.create(admin);
+    await this._userRepository.create(admin);
 
     return admin.id;
   }
 
-  public updateUser(newUser: IUser) {
-    const user = this._userRepository.get(newUser.id);
+  public async updateUser(newUser: IUser) {
+    const user = await this._userRepository.get(newUser.id);
 
-    if (user === undefined) {
+    if (user === null) {
       throw new Error(`User with id = ${newUser.id} doesn't exist`);
     }
 
-    this._userRepository.update(newUser);
+    await this._userRepository.update(newUser);
   }
 }
 

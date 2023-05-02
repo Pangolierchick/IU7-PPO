@@ -8,27 +8,29 @@ export class AdMock implements IAdvertisementRepository {
     this.value = v;
   }
 
-  get(id: string): IAdvertisement | undefined {
-    return this.value.find(x => x.id === id);
+  async get(id: string): Promise<IAdvertisement | null> {
+    const v = this.value.find(x => x.id === id);
+
+    return v === undefined ? null : v;
   }
 
-  getAll(): IAdvertisement[] {
+  async getAll(): Promise<IAdvertisement[]> {
     return this.value;
   }
 
-  approve(id: string): void {
-    const v = this.get(id);
+  async approve(id: string): Promise<void> {
+    const v = await this.get(id);
 
     if (v) {
       v.isApproved = true;
     }
   }
 
-  create(data: IAdvertisement): void {
+  async create(data: IAdvertisement): Promise<void> {
     this.value.push(data);
   }
 
-  update(newUsr: IAdvertisement): void {
+  async update(newUsr: IAdvertisement): Promise<void> {
     const i = this.value.findIndex(x => x.id === newUsr.id);
 
     if (i !== -1) {
@@ -36,7 +38,7 @@ export class AdMock implements IAdvertisementRepository {
     }
   }
 
-  delete(id: string): void {
+  async delete(id: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -44,7 +46,7 @@ export class AdMock implements IAdvertisementRepository {
     }
   }
 
-  updateScore(id: string, score: number): void {
+  async updateScore(id: string, score: number): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -52,7 +54,7 @@ export class AdMock implements IAdvertisementRepository {
     }
   }
 
-  updateDescription(id: string, descr: string): void {
+  async updateDescription(id: string, descr: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -60,7 +62,7 @@ export class AdMock implements IAdvertisementRepository {
     }
   }
 
-  updatePrice(id: string, price: number): void {
+  async updatePrice(id: string, price: number): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {

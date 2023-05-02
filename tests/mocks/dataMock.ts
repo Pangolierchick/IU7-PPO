@@ -1,3 +1,4 @@
+import { UserRole } from '../../src/interfaces/IUser';
 import {Rent, User, Advertisement} from './typesMock';
 
 export class DataMock {
@@ -19,8 +20,8 @@ export class DataMock {
 
   public static users(): User[] {
     return [
-      {id: '1', login: 'l1', password: 'p1', score: 0, role: 1},
-      {id: '2', login: 'l2', password: 'p2', score: 0, role: 0}
+      {id: '1', login: 'l1', password: 'p1', score: 0, role: UserRole.User},
+      {id: '2', login: 'l2', password: 'p2', score: 0, role: UserRole.Admin}
     ];
   }
 }

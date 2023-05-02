@@ -1,8 +1,7 @@
 export interface IRepository<T> {
-  value: T[];
-  getAll() : T[];
-  get(id: string) : T | undefined;
-  create(data: T) : void;
-  delete(id: string) : void;
-  update(newUsr: T) : void;
+  getAll() : Promise<T[]>;
+  get(id: string) : Promise<T | null>;
+  create(data: T) : Promise<void>;
+  delete(id: string) : Promise<void>;
+  update(newUsr: T) : Promise<void>;
 }

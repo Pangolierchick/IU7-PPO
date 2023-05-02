@@ -8,15 +8,17 @@ export class UserMock implements IUserRepository {
     this.value = v;
   }
 
-  get(id: string): IUser | undefined {
-    return this.value.find(x => x.id === id);
+  async get(id: string): Promise<IUser | null> {
+    const v = this.value.find(x => x.id === id);
+
+    return v === undefined ? null : v;
   }
 
-  getAll(): IUser[] {
+  async getAll(): Promise<IUser[]> {
     return this.value;
   }
 
-  update(newUsr: IUser): void {
+  async update(newUsr: IUser): Promise<void> {
     const i = this.value.findIndex(x => x.id === newUsr.id);
 
     if (i !== -1) {
@@ -24,7 +26,7 @@ export class UserMock implements IUserRepository {
     }
   }
 
-  delete(id: string): void {
+  async delete(id: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -32,11 +34,11 @@ export class UserMock implements IUserRepository {
     }
   }
 
-  create(data: IUser): void {
+  async create(data: IUser): Promise<void> {
     this.value.push(data);
   }
 
-  updateLogin(id: string, newLogin: string): void {
+  async updateLogin(id: string, newLogin: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -44,7 +46,7 @@ export class UserMock implements IUserRepository {
     }
   }
 
-  updatePassword(id: string, newPsw: string): void {
+  async updatePassword(id: string, newPsw: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -52,7 +54,7 @@ export class UserMock implements IUserRepository {
     }
   }
 
-  updateScore(id: string, newScore: number): void {
+  async updateScore(id: string, newScore: number): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {

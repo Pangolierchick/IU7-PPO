@@ -8,15 +8,17 @@ export class RentMock implements IRentRepository {
     this.value = v;
   }
 
-  get(id: string): IRent | undefined {
-    return this.value.find(x => x.id === id);
+  async get(id: string): Promise<IRent | null> {
+    const v = this.value.find(x => x.id === id);
+
+    return v === undefined ? null : v;
   }
 
-  getAll(): IRent[] {
+  async getAll(): Promise<IRent[]> {
     return this.value;
   }
 
-  update(newUsr: IRent): void {
+  async update(newUsr: IRent): Promise<void> {
     const i = this.value.findIndex(x => x.id === newUsr.id);
 
     if (i !== -1) {
@@ -24,7 +26,7 @@ export class RentMock implements IRentRepository {
     }
   }
 
-  delete(id: string): void {
+  async delete(id: string): Promise<void> {
     const i = this.value.findIndex(x => x.id === id);
 
     if (i !== -1) {
@@ -32,11 +34,11 @@ export class RentMock implements IRentRepository {
     }
   }
 
-  create(data: IRent): void {
+  async create(data: IRent): Promise<void> {
     this.value.push(data);
   }
 
-  getInDate(adId: string, from: Date, to: Date): IRent[] {
+  async getInDate(adId: string, from: Date, to: Date): Promise<IRent[]> {
     const r = this.value.filter(x => adId === x.adId && x.dateFrom >= from && to >= x.dateUntil);
 
     return r;

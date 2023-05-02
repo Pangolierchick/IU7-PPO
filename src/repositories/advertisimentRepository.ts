@@ -17,31 +17,59 @@ export class AdvertisimentRepository implements IAdvertisementRepository {
     return await this.prisma.advertisement.findMany();
   }
 
-  async update(newUsr: IAdvertisement): Promise<void> {
-    await this.prisma.advertisement.update({ data: newUsr, where: { id: newUsr.id } });
+  async update(newAdv: IAdvertisement): Promise<void> {
+    try {
+      await this.prisma.advertisement.update({ data: newAdv, where: { id: newAdv.id } });
+    } catch (e) {
+      throw new Error(`Failed to update advertisiment with id=${newAdv.id}.`);
+    }
   }
 
   async create(data: IAdvertisement): Promise<void> {
-    await this.prisma.advertisement.create({ data });
+    try {
+      await this.prisma.advertisement.create({ data });
+    } catch (e) {
+      throw new Error('Failed to create advertisiment.');
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.advertisement.delete({ where: { id } });
+    try {
+      await this.prisma.advertisement.delete({ where: { id } });
+    } catch (e) {
+      throw new Error('Failed to delete advertisiment');
+    }
   }
 
   async updateScore(id: string, score: number): Promise<void> {
-    await this.prisma.advertisement.update({ where: { id }, data: {score} });
+    try {
+      await this.prisma.advertisement.update({ where: { id }, data: {score} });
+    } catch (e) {
+      throw new Error(`Failed to update score of advertisiment with id = ${id}`);
+    }
   }
 
   async updateDescription(id: string, descr: string): Promise<void> {
-    await this.prisma.advertisement.update({ where: { id }, data: {description: descr} });
+    try {
+      await this.prisma.advertisement.update({ where: { id }, data: {description: descr} });
+    } catch (e) {
+      throw new Error(`Failed to update description of advertisiment with id = ${id}`);
+    }
   }
 
   async updatePrice(id: string, price: number): Promise<void> {
-    await this.prisma.advertisement.update({ where: { id }, data: {cost: price} });
+    try {
+      await this.prisma.advertisement.update({ where: { id }, data: {cost: price} });
+    } catch (e) {
+      throw new Error(`Failed to update price of advertisiment with id = ${id}`);
+    }
   }
 
   async approve(id: string): Promise<void> {
-    await this.prisma.advertisement.update({ where: { id }, data: {isApproved: true} });
+    try {
+      await this.prisma.advertisement.update({ where: { id }, data: {isApproved: true} });
+    } catch (e) {
+      throw new Error(`Failed to approve advertisiment with id = ${id}`);
+    }
   }
 }

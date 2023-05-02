@@ -36,8 +36,8 @@ describe('Database integration tests', () =>{
   });
 
   it('test #2', async () => {
-    const u1 = await accManager.addUser('l1', 'p1');
-    const a1 = await accManager.addAdmin('l2', 'p2');
+    const u1 = await accManager.addUser('l4', 'p1');
+    const a1 = await accManager.addAdmin('l5', 'p2');
 
     const ad1 = await adManager.addAdvertisiment({ description: 'd1', cost: 111, address: 'a1', ownerId: u1 });
     await adManager.deleteAd(ad1, a1);

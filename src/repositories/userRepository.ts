@@ -10,15 +10,27 @@ export class UserRepository implements IUserRepository {
   }
 
   async updatePassword(id: string, newPsw: string): Promise<void> {
-    await this.prisma.user.update({ data: { password: newPsw }, where: { id: id } });
+    try {
+      await this.prisma.user.update({ data: { password: newPsw }, where: { id: id } });
+    } catch (e) {
+      throw new Error(`Failed to update password of user with id = ${id}`);
+    }
   }
 
   async updateLogin(id: string, newLogin: string): Promise<void> {
-    await this.prisma.user.update({ data: { login: newLogin }, where: { id: id } });
+    try {
+      await this.prisma.user.update({ data: { login: newLogin }, where: { id: id } });
+    } catch (e) {
+      throw new Error(`Failed to update login of user with id = ${id}`);
+    }
   }
 
   async updateScore(id: string, newScore: number): Promise<void> {
-    await this.prisma.user.update({ data: { score: newScore }, where: { id: id } });
+    try {
+      await this.prisma.user.update({ data: { score: newScore }, where: { id: id } });
+    } catch (e) {
+      throw new Error(`Failed to update score of user with id = ${id}`);
+    }
   }
 
   async get(id: string): Promise<IUser | null> {
@@ -30,14 +42,26 @@ export class UserRepository implements IUserRepository {
   }
 
   async create(data: IUser): Promise<void> {
-    await this.prisma.user.create({ data });
+    try {
+      await this.prisma.user.create({ data });
+    } catch (e) {
+      throw new Error('Failed to create new user');
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.user.delete({ where: { id } });
+    try {
+      await this.prisma.user.delete({ where: { id } });
+    } catch (e) {
+      throw new Error('Failed to delete user');
+    }
   }
 
   async update(newUsr: IUser): Promise<void> {
-    await this.prisma.user.update({ data: newUsr, where: { id: newUsr.id } });
+    try {
+      await this.prisma.user.update({ data: newUsr, where: { id: newUsr.id } });
+    } catch (e) {
+      throw new Error('Failed to update user');
+    }
   }
 }

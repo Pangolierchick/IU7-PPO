@@ -17,16 +17,28 @@ export class RentRepository implements IRentRepository {
     return await this.prisma.rent.findMany();
   }
 
-  async update(newUsr: IRent): Promise<void> {
-    await this.prisma.rent.update({ data: newUsr, where: { id: newUsr.id } });
+  async update(newRent: IRent): Promise<void> {
+    try {
+      await this.prisma.rent.update({ data: newRent, where: { id: newRent.id } });
+    } catch (e) {
+      throw new Error(`Failed to update rent with id = ${newRent.id}`);
+    }
   }
 
   async create(data: IRent): Promise<void> {
-    await this.prisma.rent.create({data});
+    try {
+      await this.prisma.rent.create({data});
+    } catch (e) {
+      throw new Error('Failed to create new rent');
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.rent.delete({ where: { id } });
+    try {
+      await this.prisma.rent.delete({ where: { id } });
+    } catch (e) {
+      throw new Error('Failed to delete rent');
+    }
   }
 
   async getInDate(adId: string, from: Date, to: Date): Promise<IRent[]> {

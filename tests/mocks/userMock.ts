@@ -35,6 +35,9 @@ export class UserMock implements IUserRepository {
   }
 
   async create(data: IUser): Promise<void> {
+    if (this.value.find((x) => x.login === data.login) !== undefined) {
+      throw new Error('this login is already taken');
+    }
     this.value.push(data);
   }
 

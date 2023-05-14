@@ -1,11 +1,15 @@
-import { IAdvertisement } from '../../src/interfaces/IAdvertisement';
-import {IAdvertisementRepository} from '../../src/interfaces/IAdvertisementRepository';
+import { IAdvertisement } from "../../src/interfaces/IAdvertisement";
+import { IAdvertisementRepository } from "../../src/interfaces/IAdvertisementRepository";
 
 export class AdMock implements IAdvertisementRepository {
   value: IAdvertisement[];
 
   constructor(v: IAdvertisement[]) {
     this.value = v;
+  }
+
+  async getUsersAdvertisiments(userId: string): Promise<IAdvertisement[]> {
+    return this.value.filter(x => x.ownerId === userId);
   }
 
   async get(id: string): Promise<IAdvertisement | null> {

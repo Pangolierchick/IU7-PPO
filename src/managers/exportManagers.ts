@@ -1,2 +1,2 @@
-export * from './accountManager';
-export * from './advertisementManager';
+export * from "./accountManager";
+export * from "./advertisementManager";

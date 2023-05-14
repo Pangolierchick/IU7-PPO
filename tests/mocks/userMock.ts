@@ -1,5 +1,5 @@
-import { IUser } from '../../src/interfaces/IUser';
-import { IUserRepository } from '../../src/interfaces/IUserRepository';
+import { IUser } from "../../src/interfaces/IUser";
+import { IUserRepository } from "../../src/interfaces/IUserRepository";
 
 export class UserMock implements IUserRepository {
   value: IUser[];
@@ -10,6 +10,12 @@ export class UserMock implements IUserRepository {
 
   async get(id: string): Promise<IUser | null> {
     const v = this.value.find(x => x.id === id);
+
+    return v === undefined ? null : v;
+  }
+
+  async getByLogin(login: string): Promise<IUser | null> {
+    const v = this.value.find(x => x.login === login);
 
     return v === undefined ? null : v;
   }
@@ -36,7 +42,7 @@ export class UserMock implements IUserRepository {
 
   async create(data: IUser): Promise<void> {
     if (this.value.find((x) => x.login === data.login) !== undefined) {
-      throw new Error('this login is already taken');
+      throw new Error("this login is already taken");
     }
     this.value.push(data);
   }

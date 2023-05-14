@@ -1,10 +1,10 @@
-import { IAdvertisementRepository } from '../interfaces/IAdvertisementRepository';
-import { IAdvertisement } from '../interfaces/IAdvertisement';
-import { IRent } from '../interfaces/IRent';
-import { IRentRepository } from '../interfaces/IRentRepository';
-import { INITIAL_SCORE, UserRole } from '../interfaces/IUser';
-import { IUserRepository } from '../interfaces/IUserRepository';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { IAdvertisement } from "../interfaces/IAdvertisement";
+import { IAdvertisementRepository } from "../interfaces/IAdvertisementRepository";
+import { IRent } from "../interfaces/IRent";
+import { IRentRepository } from "../interfaces/IRentRepository";
+import { INITIAL_SCORE, UserRole } from "../interfaces/IUser";
+import { IUserRepository } from "../interfaces/IUserRepository";
 
 type AdvertisimentToBeApproved = {
   description: string;
@@ -15,13 +15,44 @@ type AdvertisimentToBeApproved = {
 
 export class AdvertisementManager {
   private _advertisimentRepository: IAdvertisementRepository;
+
   private _userRepository: IUserRepository;
+
   private _rentRepository: IRentRepository;
 
-  constructor(adRepo: IAdvertisementRepository, userRepo: IUserRepository, rentRepo: IRentRepository) {
+  constructor(
+    adRepo: IAdvertisementRepository,
+    userRepo: IUserRepository,
+    rentRepo: IRentRepository
+  ) {
     this._advertisimentRepository = adRepo;
     this._userRepository = userRepo;
     this._rentRepository = rentRepo;
+  }
+
+  public async getAdvertisiment(adId: string) {
+    const ad = await this._advertisimentRepository.get(adId);
+
+    if (!ad) {
+      throw new Error(`Advertisiment with id ${adId} was not found`);
+    }
+
+    return ad;
+  }
+
+  public async createAdvertisiment(data: AdvertisimentToBeApproved) {
+    const adv = AdvertisimentBuilder.buildAdvertisiment(data);
+    await this._advertisimentRepository.create(adv);
+
+    return adv.id;
+  }
+
+  public async getUsersAdvertisiments(userId: string) {
+    const ads = await this._advertisimentRepository.getUsersAdvertisiments(
+      userId
+    );
+
+    return ads;
   }
 
   public async newRent(adId: string, userId: string, from: Date, to: Date) {
@@ -32,6 +63,12 @@ export class AdvertisementManager {
       [from, to] = [to, from];
     }
 
+    const today = new Date();
+
+    if (from < today) {
+      throw new Error("Date can't be less than today date");
+    }
+
     if (user === null) {
       throw new Error(`User ${userId} doesn't exist`);
     }
@@ -40,11 +77,15 @@ export class AdvertisementManager {
       throw new Error(`Ad ${adId} doesn't exist`);
     }
 
+    if (userId === ad.ownerId) {
+      throw new Error("Owner cant rent own advertisement");
+    }
+
     if (!ad.isApproved) {
       throw new Error(`Ad ${adId} is not approved`);
     }
 
-    const rents = await (this._rentRepository.getInDate(adId, from, to));
+    const rents = await this._rentRepository.getInDate(adId, from, to);
 
     if (rents.length !== 0) {
       throw new Error(`Ad ${adId} already occupied in this dates`);
@@ -90,23 +131,33 @@ export class AdvertisementManager {
     return user.id;
   }
 
-  public async deleteAd(adId: string, adminId: string) {
-    const user = await this._userRepository.get(adminId);
+  public async deleteAd(adId: string, userId: string) {
+    const user = await this._userRepository.get(userId);
+    const ad = await this._advertisimentRepository.get(adId);
 
     if (user === null) {
-      throw new Error(`User ${adminId} doesn't exist`);
+      throw new Error(`User ${userId} doesn't exist`);
     }
 
-    if (user.role !== UserRole.Admin) {
-      throw new Error(`User ${adminId} not an admin`);
+    if (ad === null) {
+      throw new Error(`Ad with id ${adId} doesn't exist`);
     }
 
-    await this._advertisimentRepository.delete(adId);
+    if (user.role === UserRole.Admin || userId === ad.ownerId) {
+      await this._advertisimentRepository.delete(adId);
+    } else {
+      throw new Error("User neither admin nor owner");
+    }
   }
 }
 
 class RentBuilder {
-  public static buildRent(adId: string, userId: string, from: Date, to: Date): IRent {
+  public static buildRent(
+    adId: string,
+    userId: string,
+    from: Date,
+    to: Date
+  ): IRent {
     return {
       id: uuidv4(),
       adId: adId,
@@ -118,7 +169,9 @@ class RentBuilder {
 }
 
 class AdvertisimentBuilder {
-  public static buildAdvertisiment(ad: AdvertisimentToBeApproved): IAdvertisement {
+  public static buildAdvertisiment(
+    ad: AdvertisimentToBeApproved
+  ): IAdvertisement {
     return {
       id: uuidv4(),
       description: ad.description,

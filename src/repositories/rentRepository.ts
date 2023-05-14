@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import { IRentRepository } from '../interfaces/IRentRepository';
-import { IRent } from '../interfaces/IRent';
+import { PrismaClient } from "@prisma/client";
+import { IRent } from "../interfaces/IRent";
+import { IRentRepository } from "../interfaces/IRentRepository";
 
 export class RentRepository implements IRentRepository {
   private prisma: PrismaClient;
@@ -10,16 +10,19 @@ export class RentRepository implements IRentRepository {
   }
 
   async get(id: string): Promise<IRent | null> {
-    return await this.prisma.rent.findFirst({ where: { id } });
+    return this.prisma.rent.findFirst({ where: { id } });
   }
 
   async getAll(): Promise<IRent[]> {
-    return await this.prisma.rent.findMany();
+    return this.prisma.rent.findMany();
   }
 
   async update(newRent: IRent): Promise<void> {
     try {
-      await this.prisma.rent.update({ data: newRent, where: { id: newRent.id } });
+      await this.prisma.rent.update({
+        data: newRent,
+        where: { id: newRent.id },
+      });
     } catch (e) {
       throw new Error(`Failed to update rent with id = ${newRent.id}`);
     }
@@ -27,9 +30,9 @@ export class RentRepository implements IRentRepository {
 
   async create(data: IRent): Promise<void> {
     try {
-      await this.prisma.rent.create({data});
+      await this.prisma.rent.create({ data });
     } catch (e) {
-      throw new Error('Failed to create new rent');
+      throw new Error("Failed to create new rent");
     }
   }
 
@@ -37,15 +40,17 @@ export class RentRepository implements IRentRepository {
     try {
       await this.prisma.rent.delete({ where: { id } });
     } catch (e) {
-      throw new Error('Failed to delete rent');
+      throw new Error("Failed to delete rent");
     }
   }
 
   async getInDate(adId: string, from: Date, to: Date): Promise<IRent[]> {
-    return await this.prisma.rent.findMany({ where: {
-      adId,
-      dateFrom: { lt: to },
-      dateUntil: { gt: from },
-    }});
+    return this.prisma.rent.findMany({
+      where: {
+        adId,
+        dateFrom: { lt: to },
+        dateUntil: { gt: from },
+      },
+    });
   }
 }

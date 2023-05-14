@@ -1,5 +1,5 @@
-import { IRent } from '../../src/interfaces/IRent';
-import { IRentRepository } from '../../src/interfaces/IRentRepository';
+import { IRent } from "../../src/interfaces/IRent";
+import { IRentRepository } from "../../src/interfaces/IRentRepository";
 
 export class RentMock implements IRentRepository {
   value: IRent[];

@@ -1,3 +1,3 @@
-export * from './advertisimentRepository';
-export * from './rentRepository';
-export * from './userRepository';
+export * from "./advertisimentRepository";
+export * from "./rentRepository";
+export * from "./userRepository";

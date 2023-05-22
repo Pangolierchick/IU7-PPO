@@ -45,11 +45,27 @@ export class RentRepository implements IRentRepository {
   }
 
   async getInDate(adId: string, from: Date, to: Date): Promise<IRent[]> {
-    return this.prisma.rent.findMany({
+    return await this.prisma.rent.findMany({
       where: {
         adId,
         dateFrom: { lt: to },
         dateUntil: { gt: from },
+      },
+    });
+  }
+
+  async getAdvertisimentRents(adId: string): Promise<IRent[]> {
+    return await this.prisma.rent.findMany({
+      where: {
+        adId,
+      },
+    });
+  }
+
+  async getUsersRents(id: string): Promise<IRent[]> {
+    return await this.prisma.rent.findMany({
+      where: {
+        userId: id,
       },
     });
   }

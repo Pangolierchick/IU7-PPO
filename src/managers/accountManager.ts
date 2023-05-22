@@ -53,6 +53,20 @@ export class AccountManager {
     return !!user;
   }
 
+  public async getByLoginAndPassword(login: string, password: string) {
+    const user = await this._userRepository.getByLogin(login);
+
+    if (user) {
+      if (!(await Hash.compare(password, user.password))) {
+        throw new Error("Incorrect password");
+      }
+
+      return true;
+    }
+
+    throw new Error("Incorrect login");
+  }
+
   public async getByLogin(login: string) {
     const user = await this._userRepository.getByLogin(login);
 

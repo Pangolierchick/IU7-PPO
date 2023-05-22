@@ -1,0 +1,96 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <script src="js/scripts.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>Search</title>
+  </head>
+
+  <body>
+    <%- include('./partials/navbar', {loggedIn: loggedIn, login: login}) %>
+
+    <form action="/search" method="get">
+      <section
+        class="hero"
+      >
+        <div class="hero-body">
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <input
+                class="input is-medium"
+                type="text"
+                name="address"
+                placeholder="Address (e.g. Moscow)"
+              />
+            </p>
+
+            <div class="control">
+              <button class="button is-medium" type="submit"> Search </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <% for( let index=0; index < ads.length; index++ ) { %>
+      <a href="<%- `/advertisiment?id=${ads[index].id}` %>" class="box mx-6">
+        <article class="media">
+          <div class="media-left">
+            <figure class="image is-64x64">
+              <img src="http://via.placeholder.com/64x64" />
+            </figure>
+          </div>
+          <div class="media-content">
+            <div class="content">
+              <p><%-ads[index].description%></p>
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fa fa-usd"></i>
+                </span>
+                <span class="has-text-weight-light"><%- ads[index].cost%></span>
+              </span>
+
+              <br />
+
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fa fa-star"></i>
+                </span>
+                <span class="has-text-weight-light"><%- ads[index].score%></span>
+              </span>
+
+              <br>
+
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fa fa-location-arrow"></i>
+                </span>
+                <span class="has-text-weight-light"><%- ads[index].address%></span>
+              </span>
+
+              <br>
+
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span class="has-text-weight-light"><%- ads[index].login%></span>
+              </span>
+            </div>
+          </div>
+        </article>
+      </a>
+
+    <% } %> <%- include('./partials/footer') %>
+  </body>
+</html>

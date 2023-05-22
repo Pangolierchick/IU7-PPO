@@ -4,7 +4,7 @@ export enum UserRole {
   None,
 }
 
-export const INITIAL_SCORE = 1;
+export const INITIAL_SCORE = 0;
 
 export interface IUser {
   id: string;

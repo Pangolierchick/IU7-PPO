@@ -37,9 +37,9 @@ export class UserController extends BaseController {
 
       try {
         const token = await this._userManager.loginUser(login, password);
-        res.json({ token });
+        res.send(token);
       } catch (e) {
-        res.status(401).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
@@ -62,8 +62,66 @@ export class UserController extends BaseController {
           role: user.role,
         });
       } catch (e) {
-        console.log(e);
-        res.status(401).json({ errors: e as Error });
+        res.status(404).json({ errors: (e as Error).message });
+      }
+    } else {
+      res.status(400).json({ errors: result.array() });
+    }
+  }
+
+  public async checkUser(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { login, password } = matchedData(req);
+
+      try {
+        const isExists = await this._userManager.getByLoginAndPassword(
+          login,
+          password
+        );
+
+        res.status(200).json({ success: isExists });
+      } catch (e) {
+        res.status(500).json({ errors: (e as Error).message });
+      }
+    } else {
+      res.status(400).json({ errors: result.array() });
+    }
+  }
+
+  public async validateToken(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { token } = matchedData(req);
+      try {
+        await this._userManager.authenticateUser(token);
+        res.status(200);
+      } catch (e) {
+        res.status(401);
+      }
+    } else {
+      res.status(400);
+    }
+  }
+
+  public async getUserById(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { id } = matchedData(req);
+
+      try {
+        const user = await this._userManager.getUser(id);
+        res.status(200).json({
+          id: user.id,
+          login: user.login,
+          role: user.role,
+          score: user.score,
+        });
+      } catch (e) {
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });

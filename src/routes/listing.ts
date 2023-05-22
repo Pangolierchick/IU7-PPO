@@ -47,7 +47,25 @@ listingRouter.delete(
   "/deleteAd",
   authMiddleware.authenticateMiddleware.bind(authMiddleware),
   query("adId").isUUID(),
-  listingController.deleteAddvertisiment.bind(listingController)
+  listingController.deleteAdvertisiment.bind(listingController)
+);
+
+listingRouter.get(
+  "/searchAds",
+  query("address").escape(),
+  listingController.searchAdvertisiments.bind(listingController)
+);
+
+listingRouter.get(
+  "/getAdvertisimentRentDates",
+  query("adId").notEmpty().escape(),
+  listingController.getAdvertisimentRentDates.bind(listingController)
+);
+
+listingRouter.get(
+  "/getUsersRents",
+  query("id").isUUID(),
+  listingController.getUsersRents.bind(listingController)
 );
 
 export default listingRouter;

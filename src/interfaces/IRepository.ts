@@ -3,5 +3,5 @@ export interface IRepository<T> {
   get(id: string): Promise<T | null>;
   create(data: T): Promise<void>;
   delete(id: string): Promise<void>;
-  update(newUsr: T): Promise<void>;
+  update(n: T): Promise<void>;
 }

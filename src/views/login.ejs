@@ -1,0 +1,94 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <script src="js/scripts.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <%- include('./partials/navbar'); -%>
+    <div class="is-flex is-justify-content-center box is-shadowless">
+      <form
+        id="login-form"
+        class="flex-item"
+        method="post"
+        onsubmit="onSubmitFormLogin(this); return false"
+      >
+        <div class="field">
+          <label class="label">Login</label>
+          <div class="control">
+            <input
+              id="login-input"
+              name="login"
+              class="input"
+              type="text"
+              placeholder="BeautifulLogin111"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Password</label>
+          <div class="control">
+            <input
+              id="password-input"
+              name="password"
+              class="input"
+              type="password"
+              placeholder="*******"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-light is-success">
+              Submit
+            </button>
+          </div>
+
+          <div class="control">
+            <button href="/" type="reset" class="button is-danger is-light">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <p
+            id="error-msg"
+            class="has-text-danger has-background-danger-light has-text-centered"
+          ></p>
+        </div>
+      </form>
+    </div>
+
+    <%- include('./partials/footer'); -%>
+  </body>
+
+  <script>
+    function onSubmitFormLogin(form) {
+      const login = document.getElementById("login-input").value;
+      const password = document.getElementById("password-input").value;
+      fetch(`/api/user/checkUser?login=${login}&password=${password}`).then(
+        (r) => {
+          if (r.status === 200) {
+            document.getElementById("error-msg").innerHTML = "";
+            form.submit();
+          } else {
+            document.getElementById("error-msg").innerHTML =
+              "Incorrect login or password";
+          }
+        }
+      );
+    }
+  </script>
+</html>

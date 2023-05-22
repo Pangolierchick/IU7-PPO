@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <script src="js/scripts.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./partials/navbar', {loggedIn: loggedIn, login: login}); %>
+
+    <form action="/search" method="get">
+      <section
+        class="hero is-flex-direction-row is-align-items-center"
+        style="min-height: 65vh"
+      >
+        <div class="hero-body center">
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <input
+                class="input is-medium"
+                type="text"
+                name="address"
+                placeholder="Address (e.g. Moscow)"
+              />
+            </p>
+
+            <div class="control">
+              <button class="button is-medium" type="submit"> Search </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <%- include('./partials/footer'); -%>
+  </body>
+</html>

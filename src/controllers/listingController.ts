@@ -30,11 +30,11 @@ class ListingController extends BaseController {
       const { adId } = matchedData(req);
 
       try {
-        const ad = await this._advManager.getAdvertisiment(adId);
+        const ad = await this._advManager.getAdvertisimentWithOwner(adId);
 
-        res.json(ad);
+        res.status(200).json(ad);
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
@@ -51,7 +51,7 @@ class ListingController extends BaseController {
 
         res.json(ads);
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
@@ -75,7 +75,7 @@ class ListingController extends BaseController {
 
         res.status(201).json({ adId });
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
@@ -98,7 +98,7 @@ class ListingController extends BaseController {
         );
         res.status(201).json({ rent });
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
@@ -116,14 +116,14 @@ class ListingController extends BaseController {
         const r = await this._advManager.approveAd(adId, adminId);
         res.status(200).json({ r });
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });
     }
   }
 
-  public async deleteAddvertisiment(req: Request, res: Response) {
+  public async deleteAdvertisiment(req: Request, res: Response) {
     const result = validationResult(req);
 
     if (result.isEmpty()) {
@@ -134,7 +134,59 @@ class ListingController extends BaseController {
         await this._advManager.deleteAd(adId, ownerId);
         res.status(200).json({ result: "success" });
       } catch (e) {
-        res.status(400).json({ errors: (e as Error).message });
+        res.status(500).json({ errors: (e as Error).message });
+      }
+    } else {
+      res.status(400).json({ errors: result.array() });
+    }
+  }
+
+  public async searchAdvertisiments(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { address } = matchedData(req);
+
+      try {
+        const ads = await this._advManager.searchAdvertisiments(address);
+        res.status(200).json({ ads });
+      } catch (e) {
+        res.status(500).json({ errors: (e as Error).message });
+      }
+    } else {
+      res.status(400).json({ errors: result.array() });
+    }
+  }
+
+  public async getAdvertisimentRentDates(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { adId } = matchedData(req);
+
+      try {
+        const dates = await this._advManager.getAdvertisimentsRentDates(adId);
+
+        res.status(200).json(dates);
+      } catch (e) {
+        res.status(500).json({ errors: (e as Error).message });
+      }
+    } else {
+      res.status(400).json({ errors: result.array() });
+    }
+  }
+
+  public async getUsersRents(req: Request, res: Response) {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+      const { id } = matchedData(req);
+
+      try {
+        const rents = await this._advManager.getUsersRents(id);
+        res.status(200).json(rents);
+      } catch (e) {
+        res.status(500).json({ errors: (e as Error).message });
       }
     } else {
       res.status(400).json({ errors: result.array() });

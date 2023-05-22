@@ -149,6 +149,54 @@ export class AdvertisementManager {
       throw new Error("User neither admin nor owner");
     }
   }
+
+  public async searchAdvertisiments(needle: string) {
+    const ads = await this._advertisimentRepository.getAllWithOwner();
+
+    if (needle) {
+      const city = needle.split(",")[0]; //FIXME: search by city (maybe someday ill fix it)
+
+      const byCity = ads.filter(
+        (x) =>
+          x.address.split(",")[0].toLowerCase() === city.toLowerCase() &&
+          x.isApproved
+      );
+
+      return byCity;
+    }
+
+    return ads.filter((x) => x.isApproved);
+  }
+
+  public async getAdvertisimentWithOwner(id: string) {
+    const ad = await this._advertisimentRepository.getWithOwner(id);
+
+    if (!ad) {
+      throw new Error(`Advertisiment with id ${id} was not found`);
+    }
+
+    return ad;
+  }
+
+  public async getAdvertisimentsRentDates(id: string) {
+    const rents = await this._rentRepository.getAdvertisimentRents(id);
+    const dates: string[] = [];
+
+    rents.forEach((r) => {
+      dates.push(`${r.dateFrom.toISOString()}:${r.dateUntil.toISOString()}`);
+    });
+
+    return dates;
+  }
+
+  public async getUsersRents(id: string) {
+    try {
+      const rents = await this._rentRepository.getUsersRents(id);
+      return rents;
+    } catch (e) {
+      throw new Error("Failed to get users rents");
+    }
+  }
 }
 
 class RentBuilder {

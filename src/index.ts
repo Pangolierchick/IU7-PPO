@@ -3,12 +3,15 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { config } from "./config";
+import { ExpressLogger } from "./logger";
 import apiRouter from "./routes/api";
 import homeRouter from "./routes/home";
 
 const app = express();
 
 app.set("views", "src/views");
+app.use(ExpressLogger.createFileLogger());
+app.use(ExpressLogger.createConsoleLogger());
 app.use(express.static("src/static/"));
 app.use(express.json());
 app.use(urlencoded({ extended: false }));

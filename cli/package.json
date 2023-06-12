@@ -1,0 +1,23 @@
+{
+  "name": "ppo_cli",
+  "module": "index.ts",
+  "type": "module",
+  "main": "build/index.js",
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/inquirer": "^9.0.3",
+    "@types/node-fetch": "^2.6.4",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^10.0.1",
+    "inquirer": "^9.2.7",
+    "node-fetch": "^3.3.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "init": "yarn run build && node ./build/index.js"
+  }
+}

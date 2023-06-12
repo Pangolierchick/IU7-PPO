@@ -1,15 +1,13 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { AccountManager } from "../managers/accountManager";
-import { UserRepository } from "../repositories/userRepository";
-import { BaseController } from "./baseController";
+import { RepoFactory } from "../repositories/repoFactory";
 
-export class UserController extends BaseController {
+export class UserController {
   private _userManager: AccountManager;
-  constructor(prisma: PrismaClient) {
-    super(prisma);
-    const _userRepo = new UserRepository(this._prisma);
+  constructor() {
+    const fact = new RepoFactory();
+    const _userRepo = fact.getUserRepository();
     this._userManager = new AccountManager(_userRepo);
   }
   public async signup(req: Request, res: Response) {

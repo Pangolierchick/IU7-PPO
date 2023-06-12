@@ -1,26 +1,18 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
-import { AccountManager } from "../managers/accountManager";
 import { AdvertisementManager } from "../managers/advertisementManager";
-import { AdvertisimentRepository } from "../repositories/advertisimentRepository";
-import { RentRepository } from "../repositories/rentRepository";
-import { UserRepository } from "../repositories/userRepository";
-import { BaseController } from "./baseController";
+import { RepoFactory } from "../repositories/repoFactory";
 
-class ListingController extends BaseController {
-  private _userManager: AccountManager;
+class ListingController {
   private _advManager: AdvertisementManager;
 
-  constructor(prisma: PrismaClient) {
-    super(prisma);
-
-    const _advRepo = new AdvertisimentRepository(prisma);
-    const _rentRepo = new RentRepository(prisma);
-    const _userRepo = new UserRepository(prisma);
+  constructor() {
+    const fact = new RepoFactory();
+    const _advRepo = fact.getAdvertisementRepository();
+    const _rentRepo = fact.getRentRepository();
+    const _userRepo = fact.getUserRepository();
 
     this._advManager = new AdvertisementManager(_advRepo, _userRepo, _rentRepo);
-    this._userManager = new AccountManager(_userRepo);
   }
 
   public async getAdvertisiment(req: Request, res: Response) {

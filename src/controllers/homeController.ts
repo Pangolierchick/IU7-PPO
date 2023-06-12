@@ -1,24 +1,20 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import fetch from "node-fetch";
 import { config } from "../config";
 import { AccountManager } from "../managers/accountManager";
 import { AdvertisementManager } from "../managers/advertisementManager";
-import { AdvertisimentRepository } from "../repositories/advertisimentRepository";
-import { RentRepository } from "../repositories/rentRepository";
-import { UserRepository } from "../repositories/userRepository";
-import { BaseController } from "./baseController";
+import { RepoFactory } from "../repositories/repoFactory";
 
-export class HomeController extends BaseController {
+export class HomeController {
   private _userManager: AccountManager;
   private _advManager: AdvertisementManager;
 
-  constructor(prisma: PrismaClient) {
-    super(prisma);
+  constructor() {
+    const fact = new RepoFactory();
+    const _advRepo = fact.getAdvertisementRepository();
 
-    const _advRepo = new AdvertisimentRepository(prisma);
-    const _rentRepo = new RentRepository(prisma);
-    const _userRepo = new UserRepository(prisma);
+    const _rentRepo = fact.getRentRepository();
+    const _userRepo = fact.getUserRepository();
 
     this._advManager = new AdvertisementManager(_advRepo, _userRepo, _rentRepo);
     this._userManager = new AccountManager(_userRepo);
@@ -43,7 +39,8 @@ export class HomeController extends BaseController {
 
   public async getHomePage(req: Request, res: Response) {
     const { token, login } = req.cookies;
-    res.render("home", { loggedIn: await this.isAuth(token), login: login });
+    const loggedIn = await this.isAuth(token);
+    res.render("home", { loggedIn, login: login });
   }
 
   public async getLoginPage(req: Request, res: Response) {

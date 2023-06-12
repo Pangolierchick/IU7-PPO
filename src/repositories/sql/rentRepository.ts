@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { IRent } from "../interfaces/IRent";
-import { IRentRepository } from "../interfaces/IRentRepository";
+import { IRent } from "../../interfaces/IRent";
+import { IRentRepository } from "../../interfaces/IRentRepository";
 
 export class RentRepository implements IRentRepository {
   private prisma: PrismaClient;

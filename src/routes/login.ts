@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import { body, query } from "express-validator";
 import { UserController } from "../controllers/userController";
 
 const loginRouter = Router();
-const prisma = new PrismaClient();
-const userController = new UserController(prisma);
+const userController = new UserController();
 
 loginRouter.post(
   "/login",

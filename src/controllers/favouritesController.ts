@@ -1,17 +1,14 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { FavouritesManager } from "../managers/favouritesManager";
-import { FavouritesRepository } from "../repositories/favouritesRepository";
-import { BaseController } from "./baseController";
+import { RepoFactory } from "../repositories/repoFactory";
 
-class FavouritesController extends BaseController {
+class FavouritesController {
   private _favManager: FavouritesManager;
 
-  constructor(prisma: PrismaClient) {
-    super(prisma);
-
-    const favRepo = new FavouritesRepository(prisma);
+  constructor() {
+    const fact = new RepoFactory();
+    const favRepo = fact.getFavouritesRepository();
     this._favManager = new FavouritesManager(favRepo);
   }
 

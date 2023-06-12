@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import { query } from "express-validator";
 import FavouritesController from "../controllers/favouritesController";
 import { AuthenticateMiddleware } from "../middlewares/authenticateMiddleware";
 
 const favouritesRouter = Router();
-const prisma = new PrismaClient();
-const favController = new FavouritesController(prisma);
-const authMiddleware = new AuthenticateMiddleware(prisma);
+const favController = new FavouritesController();
+const authMiddleware = new AuthenticateMiddleware();
 
 favouritesRouter.get(
   "/userFavs",

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { IFavourites, IFavouritesWithUser } from "../interfaces/IFavourites";
-import { IFavouritesRepository } from "../interfaces/IFavouritesRepository";
+import { IFavourites, IFavouritesWithUser } from "../../interfaces/IFavourites";
+import { IFavouritesRepository } from "../../interfaces/IFavouritesRepository";
 
 export class FavouritesRepository implements IFavouritesRepository {
   private prisma: PrismaClient;

@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import { body, query } from "express-validator";
 import ListingController from "../controllers/listingController";
 import { AuthenticateMiddleware } from "../middlewares/authenticateMiddleware";
 
 const listingRouter = Router();
-const prisma = new PrismaClient();
-const listingController = new ListingController(prisma);
-const authMiddleware = new AuthenticateMiddleware(prisma);
+const listingController = new ListingController();
+const authMiddleware = new AuthenticateMiddleware();
 
 listingRouter.post(
   "/createAdvertisiment",

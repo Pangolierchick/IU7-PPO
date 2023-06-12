@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import {
   IAdvertisement,
   IAdvertisementWithOwner,
-} from "../interfaces/IAdvertisement";
-import { IAdvertisementRepository } from "../interfaces/IAdvertisementRepository";
+} from "../../interfaces/IAdvertisement";
+import { IAdvertisementRepository } from "../../interfaces/IAdvertisementRepository";
 
 export class AdvertisimentRepository implements IAdvertisementRepository {
   private prisma: PrismaClient;

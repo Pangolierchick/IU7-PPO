@@ -1,10 +1,9 @@
-import { assert, beforeEach, describe, expect, it } from "vitest";
-import { DataMock } from "../mocks/dataMock";
-import { UserMock } from "../mocks/userMock";
-import { AdMock } from "../mocks/adMock";
-import { RentMock } from "../mocks/rentMock";
-import { AccountManager } from "../../src/managers/accountManager";
+import { beforeEach, describe, expect, it } from "vitest";
 import { AdvertisementManager } from "../../src/managers/advertisementManager";
+import { AdMock } from "../mocks/adMock";
+import { DataMock } from "../mocks/dataMock";
+import { RentMock } from "../mocks/rentMock";
+import { UserMock } from "../mocks/userMock";
 
 let adManager: AdvertisementManager;
 let adRepo: AdMock;
@@ -20,7 +19,12 @@ describe("AdvertisementManager unit tests", () => {
   });
 
   it("creating new rent", async () => {
-    const id = await adManager.newRent("2", "1", new Date(2001, 2), new Date(2001, 3));
+    const id = await adManager.newRent(
+      "2",
+      "1",
+      new Date(2024, 2),
+      new Date(2024, 3)
+    );
     const rent = await rentRepo.get(id);
 
     expect(rent).toBeDefined;
@@ -42,15 +46,21 @@ describe("AdvertisementManager unit tests", () => {
   });
 
   it("[NEGATIVE] trying to create new rent in existing dates", async () => {
-    await adManager.newRent("2", "1", new Date(2001, 2), new Date(2001, 3));
-    await expect(adManager.newRent("2", "1", new Date(2001, 2), new Date(2001, 3))).rejects.toMatch(/already occupied in this dates/);
+    await adManager.newRent("2", "1", new Date(2024, 2), new Date(2024, 3));
+    await expect(
+      adManager.newRent("2", "1", new Date(2024, 2), new Date(2024, 3))
+    ).rejects.toMatch(/already occupied in this dates/);
   });
 
   it("[NEGATIVE] approve by regular user", async () => {
-    await expect(adManager.approveAd("1", "1")).rejects.toMatch(/not an admin/);
+    await expect(adManager.approveAd("1", "1")).rejects.toMatch(
+      /User \d not an admin/
+    );
   });
 
   it("[NEGATIVE] delete by regular user", async () => {
-    await expect(adManager.deleteAd("1", "1")).rejects.toMatch(/not an admin/);
+    await expect(adManager.deleteAd("1", "1")).rejects.toMatch(
+      /User neither admin nor owner/
+    );
   });
 });

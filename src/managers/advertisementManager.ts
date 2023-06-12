@@ -154,7 +154,7 @@ export class AdvertisementManager {
     const ads = await this._advertisimentRepository.getAllWithOwner();
 
     if (needle) {
-      const city = needle.split(",")[0]; //FIXME: search by city (maybe someday ill fix it)
+      const city = needle.split(",")[0]; //FIXME: search by city (fix later)
 
       const byCity = ads.filter(
         (x) =>

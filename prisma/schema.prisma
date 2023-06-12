@@ -21,6 +21,7 @@ model Advertisement {
 
   rent Rent[]
   user User   @relation(fields: [ownerId], references: [id])
+  Favourites Favourites[]
 }
 
 model Rent {
@@ -42,4 +43,14 @@ model User {
   role          Int
   Rent          Rent[]
   Advertisement Advertisement[]
+  Favourites    Favourites[]
+}
+
+model Favourites {
+  id     String @id
+  userId String
+  adId   String
+
+  user          User          @relation(fields: [userId], references: [id])
+  advertisiment Advertisement @relation(fields: [adId], references: [id])
 }

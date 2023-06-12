@@ -1,0 +1,194 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <script src="js/scripts.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/dark.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar@2.6.0/build/vanilla-calendar.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar@2.6.0/build/vanilla-calendar.min.css"
+    />
+    <title>Advertisiment</title>
+
+    <script>
+      var chosenDates = [];
+      function clickDay(event, dates) {
+        dates.sort((a, b) => +new Date(a) - +new Date(b));
+        if (dates.length > 1) {
+          chosenDates = [dates[0], dates[dates.length - 1]];
+        }
+      }
+
+      async function onClickRent() {
+        if (chosenDates.length != 2) {
+          document.getElementById("rent-error-msg").innerHTML =
+            "Choose two dates";
+        } else {
+          document.getElementById("rent-error-msg").innerHTML = "";
+          let params = new URL(document.location).searchParams;
+          let id = params.get("id");
+
+          const token = getCookie("token");
+
+          const r = await fetch(`/api/listing/createRent?adId=${id}`, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            method: "POST",
+            body: JSON.stringify({ from: chosenDates[0], to: chosenDates[1] }),
+          });
+
+          if (r.ok) {
+            document.location.reload();
+          } else {
+            document.getElementById("rent-error-msg").innerHTML =
+              await r.text();
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <%- include('./partials/navbar', {loggedIn: loggedIn, login: login}); %>
+
+    <div id="rentModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <div id="calendar"></div>
+          <div class="columns is-mobile">
+            <div class="column">
+              <button onclick="onClickRent()" class="button is-success">
+                <span class="icon is-small">
+                  <i class="fa fa-check"></i>
+                </span>
+                <span>Rent</span>
+              </button>
+            </div>
+            <div class="column">
+              <p
+                id="rent-error-msg"
+                class="has-text-danger has-text-centered"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+      <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          let params = new URL(document.location).searchParams;
+          let id = params.get("id");
+          const reqDates = await fetch(
+            `/api/listing/getAdvertisimentRentDates?adId=${id}`
+          );
+
+          const dates = await reqDates.json();
+
+          const options = {
+            type: "multiple",
+            settings: {
+              range: {
+                min: new Date().toISOString(),
+                disabled: [...dates],
+              },
+              selection: {
+                day: "multiple-ranged",
+              },
+            },
+            actions: {
+              clickDay,
+            },
+          };
+
+          const calendar = new VanillaCalendar("#calendar", options);
+          calendar.init();
+        });
+      </script>
+    </div>
+
+    <div class="box mx-6">
+      <article class="media">
+        <div class="media-left">
+          <figure class="image is-64x64">
+            <img src="http://via.placeholder.com/64x64" />
+          </figure>
+        </div>
+        <div class="media-content">
+          <div class="content">
+            <p><%-ad.description%></p>
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fa fa-usd"></i>
+              </span>
+              <span class="has-text-weight-light"><%- ad.cost%></span>
+            </span>
+
+            <br />
+
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fa fa-star"></i>
+              </span>
+              <span class="has-text-weight-light"><%- ad.score%></span>
+            </span>
+
+            <br />
+
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fa fa-location-arrow"></i>
+              </span>
+              <span class="has-text-weight-light"><%- ad.address%></span>
+            </span>
+
+            <br />
+
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fa fa-user"></i>
+              </span>
+              <span class="has-text-weight-light"><%- ad.login%></span>
+            </span>
+          </div>
+          <% if (loggedIn) { %>
+          <nav class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <a
+                  id="rentSubmit"
+                  class="button is-info js-modal-trigger"
+                  data-target="rentModal"
+                  >Rent</a
+                >
+              </div>
+            </div>
+          </nav>
+          <% } %>
+        </div>
+      </article>
+    </div>
+
+    <%- include('./partials/footer'); -%>
+  </body>
+</html>

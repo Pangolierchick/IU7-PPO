@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "jsx": "react-jsx",
+    "outDir": "build",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowJs": true
+  },
+
+  "include": ["./src/**/*.ts", "./tests/**/*.ts"],
+  "exclude": ["./src/static/"]
+}

@@ -1,0 +1,85 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <script src="js/scripts.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <%- include('./partials/navbar', {loggedIn: loggedIn, login: login}); %>
+
+    <section class="hero">
+      <div class="hero-body">
+        <p class="title"><%- user.login %></p>
+      </div>
+      <div class="box">
+        <h1 class="subtitle is-4">Your advertisiments</h1>
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+            <th><abbr title="number"></abbr>Number</th>
+            <th><abbr title="description"></abbr>Description</th>
+            <th><abbr title="cost"></abbr>Cost</th>
+            <th><abbr title="address"></abbr>Address</th>
+            <th><abbr title="approved"></abbr>Is approved</th>
+          </thead>
+          <tbody>
+            <% for( let index = 0; index < ads.length; index++ ) { %>
+            <tr>
+              <td>
+                <a href="<%- `/advertisiment?id=${ads[index].id}` %>"
+                  ><%- `#${index + 1}` %></a
+                >
+              </td>
+              <td>
+                <%- ads[index].description.split(" ").slice(0, 4).join(" ") +
+                "..." %>
+              </td>
+
+              <td><%- ads[index].cost %></td>
+
+              <td><%- ads[index].address %></td>
+              <td><%- ads[index].isApproved %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="box">
+        <h1 class="subtitle is-4">Your rents</h1>
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+            <th><abbr title="number"></abbr>Number</th>
+            <th><abbr title="from"></abbr>from</th>
+            <th><abbr title="to"></abbr>to</th>
+            <th>
+              <abbr title="ad"></abbr>Advertisiment
+            </th>
+          </thead>
+          <tbody>
+            <% for( let index = 0; index < rents.length; index++ ) { %>
+            <tr>
+              <td><%- index + 1 %></td>
+              <td>
+                <%- new Date(rents[index].dateFrom).toLocaleDateString() %>
+              </td>
+
+              <td><%- new Date(rents[index].dateUntil).toLocaleDateString()%></td>
+
+              <td><a href=<%-`/advertisiment?id=${rents[index].adId}` %>>click me</a></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <%- include('./partials/footer'); -%>
+  </body>
+</html>
